@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+  <title> CookLook | Snap a photo of your pantry, we'll do the rest </title>
+  <link rel="shortcut icon" href="favicon.png">
+  <meta name="author" content="Anson Lai">
+  <meta name="application-name" content="CookLook">
+  <meta name="description"
+    content="CookLook uses AI to scan images of your fridge or pantry and suggests delicious recipes based on the ingredients you have at hand.">
+  <meta name="keywords" content="AI, cooking, recipes, food, ingredients, kitchen, culinary">
+  <meta name="twitter:title" content="AI Powered Cooking Assistant">
+  <meta name="twitter:description"
+    content="Discover recipes you can cook with the ingredients you already have with CookLook - your AI-powered cooking assistant.">
+  <meta name="twitter:creator" content="@PharaohsVizier">
+  <meta name="twitter:image" content="webpreview.png">
+  <meta name="twitter:card" content="summary">
+  <meta property="og:title" content="CookLook: AI Cooking Assistant">
+  <meta property="og:description"
+    content="Need cooking inspiration? CookLook identifies your available ingredients and suggests recipes to match. Cook something new every day!">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="webpreview.png">
+  <meta property="og:logo" content="logo.png">
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <meta property="og:locale" content="en_US">
+  <meta name="language" content="English">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"
+    integrity="sha512-LhccdVNGe2QMEfI3x4DVV3ckMRe36TfydKss6mJpdHjNFiV07dFpS2xzeZedptKZrwxfICJpez09iNioiSZ3hA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+</head>
+
+<body class="d-flex flex-column h-100" onload="setup()" style="background-color: rgb(255, 255, 255);">
+
+  <nav class="navbar navbar-light" style="background-color: rgb(255, 255, 255);">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <div style="height: 4rem; width: 4rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0.00 0.00 1024.00 1024.00">
+            <path fill="#f17f0c" d="
+              M 647.54 306.01
+              Q 648.01 308.14 649.96 307.18
+              Q 651.71 306.32 653.80 305.68
+              C 665.49 302.05 674.35 299.71 685.74 298.67
+              C 722.32 295.33 758.88 309.61 783.35 337.02
+              C 798.78 354.30 810.42 376.54 813.68 399.72
+              C 815.25 410.90 816.00 421.41 814.47 432.73
+              Q 808.39 477.81 775.23 508.51
+              C 754.42 527.76 726.76 538.90 698.40 539.82
+              A 1.16 1.16 0.0 0 0 697.28 540.98
+              L 697.25 606.28
+              A 1.59 1.56 -70.6 0 0 697.82 607.50
+              Q 699.93 609.24 702.31 610.92
+              Q 726.70 628.05 739.81 639.42
+              Q 761.62 658.33 771.88 668.87
+              C 778.37 675.53 781.64 683.82 778.82 692.98
+              Q 776.73 699.79 772.09 704.34
+              Q 748.33 727.65 727.01 745.04
+              C 708.47 760.16 687.51 775.33 662.77 788.53
+              Q 662.49 788.68 662.18 788.73
+              C 661.49 788.85 661.30 789.31 660.78 789.59
+              C 617.79 812.31 570.56 825.40 521.86 825.86
+              C 493.61 826.13 464.82 821.30 438.00 813.52
+              Q 419.99 808.29 396.25 797.74
+              Q 371.35 786.68 343.77 768.10
+              C 316.66 749.85 294.07 728.60 271.70 706.55
+              Q 269.09 703.98 265.16 699.32
+              C 258.72 691.67 259.48 680.01 265.27 672.24
+              Q 268.59 667.79 274.06 662.80
+              C 294.34 644.30 314.40 626.74 337.53 611.03
+              Q 340.29 609.15 342.24 608.08
+              Q 342.66 607.84 342.66 607.36
+              L 342.70 540.47
+              Q 342.70 539.99 342.23 539.97
+              Q 332.20 539.57 322.36 537.46
+              Q 284.17 529.27 258.43 501.56
+              C 241.29 483.11 228.82 457.98 225.98 432.61
+              C 222.02 397.30 232.43 363.80 256.55 337.31
+              Q 274.05 318.09 297.62 307.61
+              C 302.71 305.35 308.65 303.77 314.37 302.06
+              Q 318.19 300.92 321.22 300.36
+              Q 357.16 293.78 391.41 307.29
+              A 1.14 1.13 17.4 0 0 392.93 306.50
+              C 399.82 276.92 419.05 247.25 444.12 229.63
+              C 460.69 217.99 478.87 210.21 498.51 206.72
+              C 524.32 202.14 551.99 205.85 575.47 217.40
+              C 600.65 229.78 621.65 249.01 634.92 274.02
+              C 640.27 284.11 645.10 294.86 647.54 306.01
+              Z
+              M 631.09 507.30
+              Q 631.39 506.78 631.27 506.15
+              A 1.35 1.27 50.4 0 1 631.31 505.51
+              C 639.33 480.75 661.74 464.54 687.26 461.54
+              Q 693.35 460.82 696.91 464.72
+              Q 698.46 466.41 698.60 469.24
+              C 699.14 479.49 690.06 492.88 683.18 500.86
+              A 0.52 0.52 0.0 0 0 683.56 501.72
+              C 692.20 501.91 701.08 502.00 709.40 500.41
+              C 739.91 494.56 764.08 472.56 773.20 443.00
+              Q 775.50 435.53 775.89 433.48
+              C 778.38 420.17 777.82 403.30 772.80 390.01
+              C 761.58 360.34 735.42 338.65 703.29 336.12
+              C 692.50 335.27 680.98 336.80 670.50 339.80
+              C 652.48 344.97 636.54 357.02 625.72 372.49
+              C 623.78 375.26 621.81 378.74 619.65 380.44
+              C 615.37 383.82 609.33 382.88 606.30 378.31
+              C 602.75 372.97 607.20 365.75 608.79 360.29
+              Q 614.52 340.64 611.90 320.59
+              C 608.44 294.09 592.13 270.66 569.60 256.64
+              C 537.98 236.96 497.88 237.60 467.24 259.25
+              C 432.76 283.61 418.53 327.30 434.04 367.06
+              Q 435.95 371.95 435.67 374.67
+              C 435.07 380.36 427.94 384.63 422.62 381.70
+              Q 420.79 380.69 418.80 377.43
+              C 407.05 358.07 389.12 344.92 367.51 338.98
+              C 341.17 331.73 310.27 337.47 290.13 356.64
+              C 275.42 370.64 265.25 390.25 263.75 410.65
+              C 262.30 430.40 267.19 450.72 279.12 466.88
+              C 288.93 480.18 302.43 491.06 317.95 496.82
+              C 324.32 499.19 330.13 499.90 336.02 500.88
+              C 343.13 502.05 350.57 501.83 357.66 501.18
+              A 0.41 0.41 0.0 0 0 357.91 500.49
+              Q 348.65 491.22 343.74 479.36
+              C 342.25 475.74 340.31 468.91 342.16 465.43
+              C 344.42 461.19 350.52 461.17 354.66 461.78
+              C 376.59 465.01 395.30 477.21 405.71 497.03
+              C 409.39 504.03 413.59 513.68 403.19 517.13
+              Q 396.33 519.40 393.00 519.09
+              Q 386.26 518.45 380.37 516.42
+              Q 379.24 516.03 379.24 517.23
+              L 379.40 586.75
+              A 0.80 0.80 0.0 0 0 380.52 587.49
+              C 390.22 583.32 400.12 578.99 409.66 575.64
+              C 429.26 568.75 449.11 563.22 469.65 559.90
+              Q 483.97 557.58 495.52 556.46
+              Q 503.46 555.69 515.50 555.46
+              Q 531.20 555.17 536.50 555.49
+              Q 579.05 558.05 619.42 571.66
+              Q 633.77 576.49 647.92 581.90
+              Q 652.80 583.77 657.56 585.94
+              Q 659.19 586.69 660.72 586.92
+              A 0.42 0.42 0.0 0 0 661.21 586.51
+              L 661.33 516.73
+              Q 661.33 516.23 660.84 516.36
+              C 654.14 518.09 648.28 519.46 641.32 518.36
+              C 635.71 517.47 630.58 514.62 630.82 508.23
+              Q 630.84 507.73 631.09 507.30
+              Z
+              M 424.89 737.44
+              C 404.89 700.30 409.29 654.77 433.77 620.65
+              C 437.47 615.49 442.90 610.05 447.35 604.74
+              Q 448.90 602.89 446.57 603.49
+              C 402.15 614.95 360.66 637.12 326.03 667.28
+              Q 315.26 676.67 304.66 685.72
+              A 0.93 0.92 -43.4 0 0 304.62 687.08
+              C 336.51 717.96 372.64 744.96 413.10 763.41
+              C 427.96 770.18 443.67 775.25 459.51 779.47
+              A 0.37 0.37 0.0 0 0 459.96 779.21
+              Q 460.14 778.56 459.60 778.17
+              C 444.64 767.49 433.54 753.51 424.89 737.44
+              Z
+              M 627.97 677.29
+              C 631.45 715.10 613.50 755.32 582.07 777.36
+              Q 577.25 780.74 582.91 779.13
+              Q 587.51 777.81 594.76 775.61
+              Q 612.07 770.37 628.57 763.09
+              Q 637.59 759.11 646.40 754.07
+              C 677.04 736.55 706.25 713.58 733.48 689.73
+              Q 734.74 688.63 735.53 687.59
+              A 1.27 1.26 40.5 0 0 735.39 685.92
+              Q 718.65 669.84 700.54 655.96
+              Q 660.01 624.91 611.65 608.68
+              Q 610.19 608.19 607.29 607.47
+              Q 605.08 606.92 602.93 606.17
+              Q 597.71 604.36 593.80 603.59
+              Q 590.56 602.95 592.94 605.25
+              C 612.73 624.37 625.43 649.74 627.97 677.29
+              Z
+              M 499.4855 751.7176
+              A 67.41 67.25 108.2 0 0 584.4256 708.6845
+              A 67.41 67.25 108.2 0 0 541.5945 623.6424
+              A 67.41 67.25 108.2 0 0 456.6544 666.6755
+              A 67.41 67.25 108.2 0 0 499.4855 751.7176
+              Z" />
+            <path fill="#f17f0c" d="
+              M 518.22 266.26
+              C 523.54 256.25 537.66 259.73 537.96 270.80
+              A 0.88 0.83 62.8 0 1 537.81 271.32
+              Q 537.42 271.89 537.62 272.60
+              Q 537.76 273.08 537.45 273.48
+              C 536.75 274.35 536.60 275.39 535.94 276.16
+              Q 529.92 283.18 522.92 279.18
+              C 518.41 276.59 515.64 271.11 518.22 266.26
+              Z" />
+            <path fill="#f17f0c" d="
+              M 499.07 276.32
+              Q 499.17 276.40 499.28 276.49
+              Q 499.30 276.51 499.30 276.53
+              C 501.43 284.59 495.86 288.03 489.52 290.55
+              Q 486.46 291.76 481.64 296.88
+              Q 471.55 307.58 468.87 321.86
+              Q 468.14 325.73 467.08 327.34
+              C 464.03 331.97 457.67 333.47 453.56 329.20
+              C 449.71 325.19 450.45 319.46 451.64 314.56
+              C 456.13 296.14 467.22 281.56 483.63 272.07
+              C 489.04 268.94 495.99 269.62 498.73 275.87
+              Q 498.84 276.14 499.07 276.32
+              Z" />
+            <path fill="#f17f0c" d="
+              M 294.12 382.12
+              C 299.16 374.61 307.90 364.56 317.10 361.65
+              C 319.80 360.80 324.46 361.34 326.56 363.51
+              Q 332.90 370.04 327.31 376.78
+              C 326.07 378.28 324.21 379.03 322.47 379.89
+              C 312.73 384.68 305.02 397.22 303.76 407.26
+              C 303.06 412.87 303.02 417.26 297.32 418.94
+              A 1.29 0.09 -31.9 0 0 296.46 419.40
+              Q 295.94 419.71 294.98 419.72
+              Q 289.81 419.79 287.26 416.22
+              C 286.03 414.52 285.28 410.56 285.39 408.36
+              Q 286.15 394.02 294.12 382.12
+              Z" />
+            <path fill="#f17f0c" d="
+              M 713.06 363.00
+              Q 719.04 359.34 725.23 362.76
+              C 741.70 371.85 753.81 388.61 755.35 407.61
+              C 755.75 412.53 754.47 415.88 750.51 418.56
+              Q 750.10 418.84 749.61 418.92
+              L 745.25 419.62
+              Q 744.77 419.70 744.35 419.44
+              C 743.34 418.84 742.33 418.75 741.46 418.15
+              Q 737.64 415.52 737.24 410.96
+              C 736.24 399.55 729.87 386.56 719.44 380.91
+              Q 717.68 379.95 715.89 379.04
+              C 709.73 375.89 707.29 371.14 711.43 364.48
+              Q 711.92 363.70 713.06 363.00
+              Z" />
+            <path fill="#f17f0c" d="
+              M 543.66 458.70
+              C 544.29 459.47 544.72 460.50 545.41 461.17
+              Q 552.20 467.68 559.76 469.26
+              Q 570.03 471.40 577.45 469.14
+              Q 585.72 466.62 588.03 465.31
+              C 593.56 462.16 602.97 458.29 606.84 464.78
+              C 611.44 472.48 601.51 484.12 596.59 489.32
+              Q 589.46 496.86 579.67 500.30
+              C 562.27 506.42 543.82 504.28 529.51 492.22
+              Q 525.11 488.51 521.22 484.53
+              A 1.19 1.19 0.0 0 0 519.54 484.51
+              C 512.43 491.51 505.72 497.75 495.98 500.72
+              C 477.48 506.36 459.29 504.05 445.12 490.37
+              C 439.56 485.01 433.45 477.67 432.22 469.76
+              C 431.47 464.96 436.22 460.98 440.56 461.17
+              Q 442.67 461.26 448.23 463.65
+              Q 454.01 466.14 459.95 468.19
+              C 463.52 469.42 467.42 469.51 471.25 470.27
+              Q 473.47 470.71 480.21 469.17
+              Q 495.16 465.76 499.67 452.38
+              C 501.52 446.88 501.95 438.83 502.69 432.25
+              Q 503.95 420.97 508.34 410.53
+              C 511.20 403.74 518.27 396.68 525.86 402.63
+              C 535.76 410.40 537.93 430.34 538.76 441.87
+              C 539.13 446.89 540.00 454.20 543.66 458.70
+              Z" />
+            <circle fill="#f17f0c" cx="496.95" cy="672.11" r="23.96" />
+          </svg>
+        </div>
+        <span class="" style="margin-left: 0.3rem; font-size: 2rem; color: #f17f0c;"><strong>CookLook</strong> Meal Prep</span>
+      </a>
+    </div>
+  </nav>
+
+
+  <main class="flex-grow-1">
+    <div class="container">
+      <div class="row g-0">
+        <div id="padding-container" class="d-none d-md-block" style="padding-top: 5rem; padding-bottom: 5rem;"></div>
+        <div style="padding-top: 1rem; padding-bottom: 1rem;"></div>
+
+        <div id="photoCollector" class="col-md-6 offset-md-3 bg-dark rounded shadow">
+          <div class="row bg-white w-100 g-0 pt-5 pb-1 rounded-top text-dark text-center"
+            style="background: linear-gradient(rgba(171, 105, 24, 0.912), rgba(187, 154, 113, 0.641)), url('openaivtestbg.png'); background-size: cover; background-position: center; ">
+            <div class="col d-flex flex-column align-items-center">
+              <div class="mb-3 pt-3 text-center text-white" style="border-radius: .5rem; width: 50%; min-width: 200px;">
+                <h2><strong>What's for dinner...?</strong></h2>
+                <h6>Upload 2-3 photos of your fridge and pantry and our chef will walk you through your options!</h6>
+                <br>
+                <br>
+                <br>
+                <h6 class="text-white mb-0"><small>Powered by OpenAI</small></h6>
+              </div>
+            </div>
+          </div>
+          <!-- Separator -->
+          <div class="row bg-white w-100 g-0 py-5 rounded-bottom text-dark">
+            <div class="d-flex flex-column align-items-center">
+              <div class="col d-flex flex-column align-items-center">
+                <!-- Drop area -->
+                <div id="drop-area" class="drop-area mb-3 p-3 text-center text-dark"
+                  style="border: 2px dashed #d29841; border-radius: .5rem; width: 50%; min-width: 200px;">
+                  <p class="mb-0"><strong>Drop Photos Here</strong></p>
+                </div>
+              </div>
+              <div class="d-flex align-items-center w-25 my-3">
+                <hr class="flex-grow-1">
+                <span class="mx-2">or</span>
+                <hr class="flex-grow-1">
+              </div>
+
+              <!-- File input -->
+              <div class="text-center mt-3">
+                <input type="file" id="fileElem" accept="image/*" multiple style="display: none;">
+                <label class="btn btn-warning p-3 px-5" for="fileElem"><strong>Select Photos</strong></label>
+              </div>
+            </div>
+
+            <!-- Container for the processed images -->
+            <div id="image-container" class="d-flex justify-content-center align-items-center flex-wrap pt-3">
+              <!-- Processed images will be appended here -->
+            </div>
+
+          </div>
+        </div>
+
+        <div id="formCollection" class="col-md-6 p-5 d-none">
+          <form>
+            <!-- Meal Type Selection -->
+            <div class="form-group mb-3">
+              <label for="mealType" class="form-label h6">Select a meal type:</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="mealType" id="snack" value="snack">
+                <label class="form-check-label" for="snack">Snack</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="mealType" id="breakfast" value="breakfast">
+                <label class="form-check-label" for="breakfast">Breakfast</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="mealType" id="lunch" value="lunch">
+                <label class="form-check-label" for="lunch">Lunch</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="mealType" id="dinner" value="dinner">
+                <label class="form-check-label" for="dinner">Dinner</label>
+              </div>
+            </div>
+
+            <!-- Cooking Experience Selection -->
+            <div class="form-group mb-3">
+              <label for="cookingExperience" class="form-label h6">Select your cooking experience:</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="cookingExperience" id="beginner" value="beginner">
+                <label class="form-check-label" for="beginner">Beginner</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="cookingExperience" id="intermediate"
+                  value="intermediate">
+                <label class="form-check-label" for="intermediate">Intermediate</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="cookingExperience" id="advanced" value="advanced">
+                <label class="form-check-label" for="advanced">Advanced</label>
+              </div>
+            </div>
+
+            <!-- Number of People Input -->
+            <div class="form-group mb-3">
+              <label for="numberOfPeople" class="form-label h6">How many people are you cooking for?</label>
+              <input type="number" class="form-control" id="numberOfPeople" name="numberOfPeople"
+                placeholder="Enter the number of people" min="1">
+            </div>
+
+            <!-- Craving Input -->
+            <div class="form-group mb-3">
+              <label for="cravingInput" class="form-label h6">Optional Preferences (allergies, current cravings,
+                diets):</label>
+              <input type="text" class="form-control" id="cravingInput" name="craving" placeholder="Enter your craving">
+            </div>
+
+            <!-- Time Before Meal Input -->
+            <div class="form-group mb-3">
+              <label for="timeBeforeMeal" class="form-label h6">How much time do you have before meal time?</label>
+              <input type="text" class="form-control" id="timeBeforeMeal" name="timeBeforeMeal"
+                placeholder="Enter time in minutes or hours">
+            </div>
+          </form>
+
+          <div class="d-flex justify-content-center">
+            <button id="sendButton" class="btn btn-warning mt-5 p-3 px-5" onclick="sendToAPI()"
+              aria-describedby="sendHelp"><strong>Let's Cook!</strong></button>
+          </div>
+          <div id="sendHelp" class="form-text text-center">CookLook and OpenAI will <em>immediately</em> delete
+            your photos after deliver a recipe.</div>
+
+
+          <div id="loader" class="container text-center my-4 d-none">
+            <div class="spinner-grow" role="status" style="height: 0.5rem; width: 0.5rem;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow" role="status" style="height: 0.5rem; width: 0.5rem; -webkit-animation: .75s linear 0.25s infinite spinner-grow;
+                animation: .75s linear 0.25s infinite spinner-grow;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow" role="status" style="height: 0.5rem; width: 0.5rem; -webkit-animation: .75s linear 0.5s infinite spinner-grow;
+                animation: .75s linear 0.5s infinite spinner-grow;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="form-text">Analysis may take up to 30 seconds.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row g-0">
+        <div id="analysis-container" class="col my-5 bg-white text-dark rounded shadow d-none">
+          <p class="h1 text-center pt-5" style="color:#A7A5A5">SECRET RECIPE</p>
+          <p id="apiResponse" class="p-5"></p>
+        </div>
+      </div>
+
+      <div class="row d-none">
+        <h3>Base64 Encoded String:</h3>
+        <button class="btn btn-secondary"
+          onclick="copyToClipboard(document.getElementById('base64').innerText)"><small>Copy to
+            Clipboard</small></button>
+        <p id="base64" style="white-space: pre-wrap; word-break: break-all;"></p>
+      </div>
+
+
+    </div>
+  </main>
+
+
+  <footer class="footer mt-auto pt-3 pb-1 bg-white">
+    <div class="footer-copyright text-center py-3">
+      <div class="text-center">
+        <div class="d-flex align-items-center justify-content-center">
+          <div class="text-start d-inline-block align-center">
+            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+              data-name="bmc-button" data-slug="ansonlai" data-color="#FFDD00" data-emoji="" data-font="Lato"
+              data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000"
+              data-coffee-color="#ffffff"></script>
+          </div>
+          <div class="text-start d-inline-block align-center ms-3">
+          </div>
+        </div>
+      </div>
+      <p class="small mt-2">Want to support this site? Every dollar goes a long way to keep this
+        site running.</p>
+    </div>
+  </footer>
+
+
+</body>
+
+<script>
+  // Scripts to transition user through stages
+
+  // Transition element changes, add this to tag 'style="opacity: 0; visibility: hidden; transition: visibility 0s linear 0.5s, opacity 0.5s linear;"'
+  function showElement(element) {
+    // Remove 'd-none' class if it exists
+    element.classList.remove('d-none');
+    // Set the initial state
+    element.style.opacity = '0';
+    element.style.visibility = 'hidden';
+    element.style.transition = 'visibility 0s linear 0.5s, opacity 0.5s linear';
+    // Start the transition
+    setTimeout(() => {
+      element.style.visibility = 'visible';
+      element.style.opacity = '1';
+    }, 10); // Start the opacity transition after a short delay
+  }
+
+  function hideElement(element) {
+    // Set the transition properties
+    element.style.transition = 'visibility 0s linear 0.5s, opacity 0.5s linear';
+    // Start the transition
+    element.style.opacity = '0';
+    // After the transition is finished, hide the element
+    setTimeout(() => {
+      element.style.visibility = 'hidden';
+      // Optionally, add 'd-none' class back if you want to remove the element from the document flow
+      element.classList.add('d-none');
+    }, 500); // Match the delay to the duration of the opacity transition
+  }
+</script>
+
+<script>
+  // Scripts to handle API call
+
+  // Global messages array
+  var messages = [
+    {
+      "role": "user",
+      "content": [
+      ]
+    }
+  ];
+
+  var MAX_PHOTOS = 5;
+  function addToMessageContent(dict) {
+
+    if (messages[0]['content'].length < MAX_PHOTOS) {
+      messages[0]['content'].unshift(dict);
+    } else {
+      // alert(`You cannot add more than ${MAX_PHOTOS} images.`);
+    }
+  }
+
+  function processForm() {
+  // Retrieve values from the form elements
+  var mealType = document.querySelector('input[name="mealType"]:checked')?.value;
+  var cravingDescription = document.getElementById('cravingInput').value;
+  var cookingExperience = document.querySelector('input[name="cookingExperience"]:checked')?.value;
+  var timeBeforeMeal = document.getElementById('timeBeforeMeal').value;
+  var numberOfPeople = document.getElementById('numberOfPeople').value;
+
+  // Set default values if the fields are empty
+  mealType = mealType || "not selected";
+  cravingDescription = cravingDescription || "nothing specific";
+  cookingExperience = cookingExperience || "not selected";
+  timeBeforeMeal = timeBeforeMeal || "no time preference";
+  numberOfPeople = numberOfPeople || "not specified";
+
+  // Process and add the content to your message, assuming addToMessageContent is defined
+  addToMessageContent({
+    type: "text",
+    text: `The meal type selected is: ${mealType}`
+  });
+  addToMessageContent({
+    type: "text",
+    text: `The user's special preferences are: ${cravingDescription}`
+  });
+  addToMessageContent({
+    type: "text",
+    text: `The user's cooking experience is: ${cookingExperience}`
+  });
+  addToMessageContent({
+    type: "text",
+    text: `The user has this much time before meal: ${timeBeforeMeal}`
+  });
+  addToMessageContent({
+    type: "text",
+    text: `The number of people being cooked for is: ${numberOfPeople}`
+  });
+}
+
+  function sendToAPI() {
+    // The URL of the API endpoint
+    const apiUrl = "https://gptvisionapiopenai.azurewebsites.net/cook_look/";
+
+    // Prepare the HTTP headers
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    // Prepare the payload with the global messages array
+    const payload = {
+      model: "gpt-4-vision-preview",
+      messages: messages,
+      max_tokens: 800
+    };
+
+    // Process form to add more messages to the messages array
+    processForm();
+
+    document.getElementById('loader').classList.remove("d-none");
+    document.getElementById('sendButton').disabled = true;
+    // Send the POST request
+    fetch(apiUrl, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(payload)
+    })
+      .then(response => response.json())
+      .then(data => handleAPIResponse(data)) // Pass the data to the new function
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Sorry!  We hit some sort of error.  Please refresh the page and try again.')
+      });
+  }
+
+  function handleAPIResponse(data) {
+    var converter = new showdown.Converter();
+    converter.setOption('disableForced4SpacesIndentedSublists', true);
+    converter.setOption('smartIndentationFix', true);
+
+    let unhelpfulResponses = [
+      `I'm sorry, I can't assist with that request.`,
+      "I'm sorry, I cannot provide the assistance you're asking for.",
+      "I'm sorry, I can't provide assistance with that request.",
+      "I'm sorry, but I can't provide information based on these images.",
+      "Unfortunately, I can't assist with that request.",
+      "I'm sorry, but I am unable to provide the service you are asking for.",
+      "I'm sorry, I can't provide the requested analysis or suggestions."
+    ];
+
+    var text = data["response"]["choices"][0]['message']['content'];
+    var html = converter.makeHtml(text);
+    if (unhelpfulResponses.includes(text)) {
+      throw new Error('GPT cannot assist.');
+    }
+    document.getElementById('apiResponse').innerHTML = html;
+    document.getElementById('analysis-container').classList.remove("d-none");
+    document.getElementById('loader').classList.add("d-none");
+    document.getElementById('analysis-container').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('padding-container').classList.add("d-none");
+    document.getElementById('padding-container').classList.remove("d-md-block");
+    // document.getElementById('padding-container').style.paddingTop = '1rem';
+    // document.getElementById('padding-container').style.paddingBottom = '1rem';
+  }
+</script>
+<script>
+  // Scripts to handle and convert image inputs
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function handleDrop(e) {
+    let dt = e.dataTransfer;
+    let files = dt.files;
+    handleFiles(files);
+  }
+
+  function handleBrowse(e) {
+    handleFiles(e.target.files);
+  }
+
+  function handleFiles(files) {
+    ([...files]).forEach(processImage);
+  }
+
+  function copyToClipboard(base64Image) {
+    if (!base64Image) {
+      alert('No image has been processed yet!');
+      return;
+    }
+    const elem = document.createElement('textarea');
+    elem.value = base64Image;
+    document.body.appendChild(elem);
+    elem.select();
+    document.execCommand('copy');
+    document.body.removeChild(elem);
+    alert('Base64 string copied to clipboard!');
+  }
+
+  function convertToBase64(file, callback) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      callback(event.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function displayImage(base64Image) {
+    // Create an image element
+    var imgElement = document.createElement('img');
+    imgElement.src = base64Image;
+    imgElement.style.maxWidth = '150px'; // Set a max width to fit on the screen
+    imgElement.style.maxHeight = '150px';
+    imgElement.style.marginTop = '5px';
+    imgElement.style.marginRight = '5px';
+    imgElement.style.marginLeft = '5px'; // Add some margin between the drop box and the image
+
+    // Handle transition after files are uploaded
+    // Append the image to the container
+    document.getElementById('image-container').appendChild(imgElement);
+    // Format image loader
+    document.getElementById('image-container').style.marginTop = '5rem';
+    // Reveal form and scroll to it
+    document.getElementById('photoCollector').classList.remove("offset-md-3");
+    document.getElementById('formCollection').classList.remove("d-none");
+    document.getElementById('formCollection').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function processImage(file) {
+    if (messages[0]['content'].length >= MAX_PHOTOS) {
+      alert(`You cannot add more than ${MAX_PHOTOS} images.`);
+      return; // Stop processing the new image
+    }
+
+    convertToBase64(file, function (base64) {
+      let img = new Image();
+      img.onload = function () {
+        // Check again in case images were added since the process started
+        if (messages[0]['content'].length >= MAX_PHOTOS) {
+          return; // Stop the image processing if the limit is reached
+        }
+        let squareSize = Math.max(img.width, img.height);
+        let canvas = document.createElement('canvas');
+        canvas.width = canvas.height = squareSize;
+        let ctx = canvas.getContext('2d');
+        // ctx.fillStyle = 'white';
+        // ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, (squareSize - img.width) / 2, (squareSize - img.height) / 2);
+        let resizeCanvas = document.createElement('canvas');
+        resizeCanvas.width = resizeCanvas.height = 512;
+        let resizeCtx = resizeCanvas.getContext('2d');
+        resizeCtx.drawImage(canvas, 0, 0, 512, 512);
+        let dataURL = resizeCanvas.toDataURL('image/png');
+        document.getElementById('base64').innerText = dataURL;
+        // Save the Base64 string to a global variable for use in the API call
+        window.currentBase64Image = dataURL.split(',')[1]; // Remove the Data URL prefix for pure Base64
+        displayImage(dataURL);
+
+        // Add new content to the global messages array
+        addToMessageContent({
+          type: "image_url",
+          image_url: {
+            url: `data:image/jpeg;base64,${window.currentBase64Image}`
+          }
+        });
+      };
+      img.src = base64;
+    });
+  }
+
+  function setup() {
+    let dropArea = document.getElementById('drop-area');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    dropArea.addEventListener('drop', handleDrop, false);
+    document.getElementById('fileElem').addEventListener('change', handleBrowse, false);
+  }
+</script>
+
+</html>
