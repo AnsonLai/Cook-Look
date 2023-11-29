@@ -40,6 +40,21 @@
     crossorigin="anonymous"></script>
 </head>
 
+<style>
+  pre {
+    white-space: pre-wrap;
+    /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;
+    /* Mozilla, since 1999 */
+    white-space: -pre-wrap;
+    /* Opera 4-6 */
+    white-space: -o-pre-wrap;
+    /* Opera 7 */
+    word-wrap: break-word;
+    /* Internet Explorer 5.5+ */
+  }
+</style>
+
 <body class="d-flex flex-column h-100" onload="setup()" style="background-color: rgb(255, 255, 255);">
 
   <nav class="navbar navbar-light" style="background-color: rgb(255, 255, 255);">
@@ -275,7 +290,8 @@
             <circle fill="#f17f0c" cx="496.95" cy="672.11" r="23.96" />
           </svg>
         </div>
-        <span class="" style="margin-left: 0.3rem; font-size: 2rem; color: #f17f0c;"><strong>CookLook</strong> Meal Prep</span>
+        <span class="" style="margin-left: 0.3rem; font-size: 2rem; color: #f17f0c;"><strong>CookLook</strong> Meal
+          Prep</span>
       </a>
     </div>
   </nav>
@@ -287,13 +303,14 @@
         <div id="padding-container" class="d-none d-md-block" style="padding-top: 5rem; padding-bottom: 5rem;"></div>
         <div style="padding-top: 1rem; padding-bottom: 1rem;"></div>
 
-        <div id="photoCollector" class="col-md-6 offset-md-3 bg-dark rounded shadow">
+        <div id="photoCollector" class="col-md-6 offset-md-3 rounded shadow">
           <div class="row bg-white w-100 g-0 pt-5 pb-1 rounded-top text-dark text-center"
             style="background: linear-gradient(rgba(171, 105, 24, 0.912), rgba(187, 154, 113, 0.641)), url('openaivtestbg.png'); background-size: cover; background-position: center; ">
             <div class="col d-flex flex-column align-items-center">
               <div class="mb-3 pt-3 text-center text-white" style="border-radius: .5rem; width: 50%; min-width: 200px;">
                 <h2><strong>What's for dinner...?</strong></h2>
-                <h6>Upload photos of your fridge and pantry and our chef will walk you through your home-cooking options!</h6>
+                <h6>Upload photos of your fridge and pantry and our chef will walk you through your home-cooking
+                  options!</h6>
                 <br>
                 <br>
                 <br>
@@ -518,42 +535,42 @@
   }
 
   function processForm() {
-  // Retrieve values from the form elements
-  var mealType = document.querySelector('input[name="mealType"]:checked')?.value;
-  var cravingDescription = document.getElementById('cravingInput').value;
-  var cookingExperience = document.querySelector('input[name="cookingExperience"]:checked')?.value;
-  var timeBeforeMeal = document.getElementById('timeBeforeMeal').value;
-  var numberOfPeople = document.getElementById('numberOfPeople').value;
+    // Retrieve values from the form elements
+    var mealType = document.querySelector('input[name="mealType"]:checked')?.value;
+    var cravingDescription = document.getElementById('cravingInput').value;
+    var cookingExperience = document.querySelector('input[name="cookingExperience"]:checked')?.value;
+    var timeBeforeMeal = document.getElementById('timeBeforeMeal').value;
+    var numberOfPeople = document.getElementById('numberOfPeople').value;
 
-  // Set default values if the fields are empty
-  mealType = mealType || "not selected";
-  cravingDescription = cravingDescription || "nothing specific";
-  cookingExperience = cookingExperience || "not selected";
-  timeBeforeMeal = timeBeforeMeal || "no time preference";
-  numberOfPeople = numberOfPeople || "not specified";
+    // Set default values if the fields are empty
+    mealType = mealType || "not selected";
+    cravingDescription = cravingDescription || "nothing specific";
+    cookingExperience = cookingExperience || "not selected";
+    timeBeforeMeal = timeBeforeMeal || "no time preference";
+    numberOfPeople = numberOfPeople || "not specified";
 
-  // Process and add the content to your message, assuming addToMessageContent is defined
-  addToMessageContent({
-    type: "text",
-    text: `The meal type selected is: ${mealType}`
-  });
-  addToMessageContent({
-    type: "text",
-    text: `The user's special preferences are: ${cravingDescription}`
-  });
-  addToMessageContent({
-    type: "text",
-    text: `The user's cooking experience is: ${cookingExperience}`
-  });
-  addToMessageContent({
-    type: "text",
-    text: `The user has this much time before meal: ${timeBeforeMeal}`
-  });
-  addToMessageContent({
-    type: "text",
-    text: `The number of people being cooked for is: ${numberOfPeople}`
-  });
-}
+    // Process and add the content to your message, assuming addToMessageContent is defined
+    addToMessageContent({
+      type: "text",
+      text: `The meal type selected is: ${mealType}`
+    });
+    addToMessageContent({
+      type: "text",
+      text: `The user's special preferences are: ${cravingDescription}`
+    });
+    addToMessageContent({
+      type: "text",
+      text: `The user's cooking experience is: ${cookingExperience}`
+    });
+    addToMessageContent({
+      type: "text",
+      text: `The user has this much time before meal: ${timeBeforeMeal}`
+    });
+    addToMessageContent({
+      type: "text",
+      text: `The number of people being cooked for is: ${numberOfPeople}`
+    });
+  }
 
   function sendToAPI() {
     // The URL of the API endpoint
@@ -586,7 +603,10 @@
       .then(data => handleAPIResponse(data)) // Pass the data to the new function
       .catch(error => {
         console.error('Error:', error);
-        alert('Sorry!  We hit some sort of error.  Please refresh the page and try again.')
+        alert('Sorry!  We hit some sort of error.  Please refresh the page or try again.')
+        document.getElementById('loader').classList.add("d-none");
+        document.getElementById('sendButton').disabled = false;
+        document.getElementById('sendButton').innerHTML = "<strong>Try Again</strong>";
       });
   }
 
@@ -666,21 +686,83 @@
   }
 
   function displayImage(base64Image) {
+    // Create a div element as a container
+    var divContainer = document.createElement('div');
+    divContainer.style.position = 'relative';
+    divContainer.style.display = 'inline-block'; // Allows the X button to be positioned correctly
+
     // Create an image element
     var imgElement = document.createElement('img');
     imgElement.src = base64Image;
-    imgElement.style.maxWidth = '150px'; // Set a max width to fit on the screen
+    imgElement.style.maxWidth = '150px';
     imgElement.style.maxHeight = '150px';
     imgElement.style.marginTop = '5px';
     imgElement.style.marginRight = '5px';
-    imgElement.style.marginLeft = '5px'; // Add some margin between the drop box and the image
+    imgElement.style.marginLeft = '5px';
 
-    // Handle transition after files are uploaded
-    // Append the image to the container
-    document.getElementById('image-container').appendChild(imgElement);
-    // Format image loader
+    // Create an "X" button
+    var closeButton = document.createElement('button');
+    closeButton.innerHTML = 'X';
+    closeButton.style.position = 'absolute';
+    closeButton.style.top = '0';
+    closeButton.style.right = '0';
+    closeButton.style.background = 'red';
+    closeButton.style.color = 'white';
+    closeButton.style.border = 'none';
+    closeButton.style.borderRadius = '3px'; // Rounded corners
+    closeButton.style.width = '15px'; // Smaller width
+    closeButton.style.height = '15px'; // Smaller height
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.display = 'flex'; // Use flexbox for centering
+    closeButton.style.justifyContent = 'center'; // Center horizontally
+    closeButton.style.alignItems = 'center'; // Center vertically
+    closeButton.style.fontSize = '0.8rem';
+
+    // Attach event listener to the "X" button
+    closeButton.addEventListener('click', function () {
+      // Retrieve the base64 string from the image element
+      var base64String = imgElement.src;
+
+      // Function to extract the actual base64 encoded part of the string
+      function extractBase64Data(str) {
+        var base64StartIndex = str.indexOf('base64,') + 7;
+        return str.substring(base64StartIndex);
+      }
+
+      // Extract the base64 data from the image element src
+      var strippedBase64String = extractBase64Data(base64String);
+
+      // Iterate through each message
+      messages.forEach(message => {
+        if (message.content && Array.isArray(message.content)) {
+          // Filter the content array
+          message.content = message.content.filter(contentItem => {
+            if (contentItem.type !== 'image_url' || !contentItem.image_url || !contentItem.image_url.url) {
+              return true; // Keep the content item if it's not of type 'image_url' or if url is undefined
+            }
+
+            // Extract the base64 data from the content item's URL
+            var contentBase64String = extractBase64Data(contentItem.image_url.url);
+
+            // Return false (remove) if the base64 strings match
+            return contentBase64String !== strippedBase64String;
+          });
+        }
+      });
+
+      // Remove the image container from the DOM
+      divContainer.remove();
+    });
+
+    // Append the image and the "X" button to the div
+    divContainer.appendChild(imgElement);
+    divContainer.appendChild(closeButton);
+
+    // Append the div to the image container
+    document.getElementById('image-container').appendChild(divContainer);
+
+    // Additional UI adjustment
     document.getElementById('image-container').style.marginTop = '5rem';
-    // Reveal form and scroll to it
     document.getElementById('photoCollector').classList.remove("offset-md-3");
     document.getElementById('formCollection').classList.remove("d-none");
     document.getElementById('formCollection').scrollIntoView({ behavior: 'smooth' });
