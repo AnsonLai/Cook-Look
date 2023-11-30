@@ -525,12 +525,15 @@
   ];
 
   var MAX_PHOTOS = 5;
-  function addToMessageContent(dict) {
+  function addToMessageContent(dict, contentType) {
+    var foundIndex = messages[0]['content'].findIndex(item => item.contentType === contentType);
 
-    if (messages[0]['content'].length < MAX_PHOTOS) {
-      messages[0]['content'].unshift(dict);
+    if (foundIndex !== -1) {
+      // Update existing entry
+      messages[0]['content'][foundIndex] = dict;
     } else {
-      // alert(`You cannot add more than ${MAX_PHOTOS} images.`);
+      // Add new entry if not found
+      messages[0]['content'].push(dict);
     }
   }
 
@@ -552,24 +555,33 @@
     // Process and add the content to your message, assuming addToMessageContent is defined
     addToMessageContent({
       type: "text",
+      contentType: "mealType",
       text: `The meal type selected is: ${mealType}`
-    });
+    }, "mealType");
+
     addToMessageContent({
       type: "text",
+      contentType: "specialPreferences",
       text: `The user's special preferences are: ${cravingDescription}`
-    });
+    }, "specialPreferences");
+
     addToMessageContent({
       type: "text",
+      contentType: "cookingExperience",
       text: `The user's cooking experience is: ${cookingExperience}`
-    });
+    }, "cookingExperience");
+
     addToMessageContent({
       type: "text",
+      contentType: "timeBeforeMeal",
       text: `The user has this much time before meal: ${timeBeforeMeal}`
-    });
+    }, "timeBeforeMeal");
+
     addToMessageContent({
       type: "text",
+      contentType: "numberOfPeople",
       text: `The number of people being cooked for is: ${numberOfPeople}`
-    });
+    }, "numberOfPeople");
   }
 
   function sendToAPI() {
@@ -769,7 +781,11 @@
   }
 
   function processImage(file) {
-    if (messages[0]['content'].length >= MAX_PHOTOS) {
+    // Count only 'image_url' type elements in the 'content' array
+    var imageCount = messages[0]['content'].filter(item => item.type === 'image_url').length;
+
+    // Check if the number of image_url elements exceeds MAX_PHOTOS
+    if (imageCount >= MAX_PHOTOS) {
       alert(`You cannot add more than ${MAX_PHOTOS} images.`);
       return; // Stop processing the new image
     }
@@ -778,7 +794,7 @@
       let img = new Image();
       img.onload = function () {
         // Check again in case images were added since the process started
-        if (messages[0]['content'].length >= MAX_PHOTOS) {
+        if (imageCount >= MAX_PHOTOS) {
           return; // Stop the image processing if the limit is reached
         }
         let squareSize = Math.max(img.width, img.height);
@@ -799,12 +815,14 @@
         displayImage(dataURL);
 
         // Add new content to the global messages array
+        // TODO: Cannot add contentType to images; leave it alone
+        var imageCount = messages[0]['content'].filter(item => item.type === 'image_url').length;
         addToMessageContent({
           type: "image_url",
           image_url: {
             url: `data:image/jpeg;base64,${window.currentBase64Image}`
           }
-        });
+        }, `photo${imageCount}`);
       };
       img.src = base64;
     });
